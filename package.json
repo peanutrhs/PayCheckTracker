@@ -1,0 +1,22 @@
+{
+  "name": "paychecktracker",
+  "version": "1.0.0",
+  "description": "A application to track all paychecks",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peanutrhs/PayCheckTracker.git"
+  },
+  "author": "Brian Langford",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/peanutrhs/PayCheckTracker/issues"
+  },
+  "homepage": "https://github.com/peanutrhs/PayCheckTracker#readme",
+  "dependencies": {
+    "create-react-app": "^5.0.1"
+  }
+}
