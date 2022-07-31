@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import '../index.css';
+import '../App.css';
 import "bootstrap/dist/css/bootstrap.min.css"
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import EditPayStub from './EditPayStub';
 
 
 const Stub = props => (
     
-        
-
     <tr>
       
       <td>{props.paystubs.CompanyName}</td>
@@ -16,11 +16,12 @@ const Stub = props => (
       <td>{props.paystubs.StartPeriod.substring(0,10)}</td>
       <td>{props.paystubs.EndPeriod.substring(0,10)}</td>
       <td>{props.paystubs.PayDate.substring(0,10)}</td>
-      <td>${props.paystubs.Amount}</td>
+      <td>${props.paystubs.Amount.toFixed(2)}</td>
       <td>
-        <Link to={"/edit/"+props.paystubs._id}>edit</Link> | <a href="#" onClick={() => { props.deleteStub(props.paystubs._id) }}>delete</a> | <Link to={"/detail/"+props.paystubs._id}>detail</Link>
+      <Link to={"/EditPayStub/"+props.paystubs._id}>edit</Link>| <a href="#" onClick={() => { props.deleteStub(props.paystubs._id) }}>delete</a> | <Link to={"/detail/"+props.paystubs._id}>detail</Link>
       </td>
     </tr>
+    
   )
 // this JSX
 export default class PayStubList extends Component {
@@ -50,12 +51,19 @@ export default class PayStubList extends Component {
             paystubs: this.state.paystubs.filter(el => el.id!== id)
         })
     }
-    
+    editStub(id){
+        axios.edit('http://localhost:5000/stubs/'+id)
+        .then(res => EditPayStub(res.data))
+        this.setState({
+            payStubs : this.state.paystubs.filter(el =>el.id===id)
+        })
+    }
     payStubList(){
         return this.state.paystubs.map(currentstub => {
             return <Stub paystubs={currentstub} deleteStub={this.deleteStub} key={currentstub._id}/>;
           })
     }
+    
     render() {
         return (
             <div className='App'>
@@ -68,10 +76,10 @@ export default class PayStubList extends Component {
                             <th>Start Period</th>
                             <th>End Period</th>
                             <th>Pay Date</th>
-                            <th>Amount</th>
+                            <th>Net Amount</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className='stub'>
                         { this.payStubList() }
                     </tbody>
                 </table>

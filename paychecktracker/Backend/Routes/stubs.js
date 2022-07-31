@@ -16,6 +16,7 @@ router.route('/add').post((req,res)=>{
     const Rate = req.body.Rate;
     const RegHours = req.body.RegHours;  
     const Amount = req.body.Amount;
+    const Gross = req.body.Gross;
     const GrossAmountYTD = req.body.GrossAmountYTD;
     const HolidayHours = req.body.HolidayHours;
     const HolidayAmount = req.body.HolidayAmount;
@@ -52,6 +53,7 @@ router.route('/add').post((req,res)=>{
         Rate,
         RegHours,
         Amount,
+        Gross,
         GrossAmountYTD,
         HolidayHours,
         HolidayAmount,
@@ -89,7 +91,7 @@ router.route('/add').post((req,res)=>{
 
 router.route("/:id").get((req, res) => {
     Stub.findById(req.params.id)
-        .then((video) => res.json(video))
+        .then((stub) => res.json(stub))
        .catch((err) => res.status(400).json("Error: " + err));
 });
 
@@ -99,7 +101,7 @@ router.route("/:id").delete((req, res) => {
         .catch((err) => res.status(400).json("Error: " + err));
 });
 
-router.route("/update/:id").post((req,res)=>{
+router.route("/edit/:id").post((req,res)=>{
     Stub.findByIdAndUpdate(req.params.id)
     .then(stub =>{
         stub.CompanyName = req.body.CompanyName;
@@ -110,6 +112,7 @@ router.route("/update/:id").post((req,res)=>{
         stub.Rate = req.body.Rate;
         stub.RegHours = req.body.RegHours;  
         stub.Amount = req.body.Amount;
+        stub.Gross = req.body.Gross;
         stub.GrossAmountYTD = req.body.GrossAmountYTD;
         stub.HolidayHours = req.body.HolidayHours;
         stub.HolidayAmount = req.body.HolidayAmount;
@@ -120,8 +123,6 @@ router.route("/update/:id").post((req,res)=>{
         stub.OvertimeHours = req.body.OvertimeHours;
         stub.OvertimeAmount = req.body.OvertimeAmount;
         stub.OvertimeAmountYTD = req.body.OvertimeAmountYTD;
-        stub.FICA = req.body.FICA;
-        stub.FICAYTD = req.body.FICAYTD;
         stub.Medicare = req.body.Medicare;
         stub.MedicareYTD = req.body.MedicareYTD;
         stub.SocSec = req.body.SocSec;

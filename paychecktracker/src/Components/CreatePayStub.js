@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker/dist/react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import '../index.css';
+import '../App.css';
 import axios from 'axios';
 
 
@@ -17,6 +18,7 @@ class CreatePayStub extends Component {
         this.onChangeRate = this.onChangeRate.bind(this);
         this.onChangeRegHours = this.onChangeRegHours.bind(this);
         this.onChangeAmount = this.onChangeAmount.bind(this);
+        this.onChangeGross = this.onChangeGross.bind(this);
         this.onChangeGrossAmountYTD = this.onChangeGrossAmountYTD.bind(this);
         this.onChangeHolidayHours = this.onChangeHolidayHours.bind(this);
         this.onChangeHolidayAmount = this.onChangeHolidayAmount.bind(this);
@@ -27,8 +29,6 @@ class CreatePayStub extends Component {
         this.onChangeOverTimeHours = this.onChangeOverTimeHours.bind(this);
         this.onChangeOverTimeAmount = this.onChangeOverTimeAmount.bind(this);
         this.onChangeOverTimeAmountYTD = this.onChangeOverTimeAmountYTD.bind(this);
-        this.onChangeFICA = this.onChangeFICA.bind(this);
-        this.onChangeFICAYTD = this.onChangeFICAYTD.bind(this);
         this.onChangeMedicare = this.onChangeMedicare.bind(this);
         this.onChangeMedicareYTD = this.onChangeMedicareYTD.bind(this);
         this.onChangeSocSec = this.onChangeSocSec.bind(this);
@@ -45,6 +45,7 @@ class CreatePayStub extends Component {
         this.onChangeORWBFTaxYTD = this.onChangeORWBFTaxYTD.bind(this);
         this.onChangeCompanyLogo = this.onChangeCompanyLogo.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        
         this.state = {
             CompanyName: "",
             EmployeeId: "",
@@ -54,6 +55,7 @@ class CreatePayStub extends Component {
             Rate: "",
             RegHours: "",
             Amount: "",
+            Gross: "",
             GrossAmountYTD: "",
             HolidayHours: "",
             HolidayAmount: "",
@@ -64,8 +66,6 @@ class CreatePayStub extends Component {
             OvertimeHours: "",
             OvertimeAmount: "",
             OvertimeAmountYTD: "",
-            FICA: "",
-            FICAYTD: "",
             Medicare: "",
             MedicareYTD: "",
             SocSec: "",
@@ -105,9 +105,9 @@ class CreatePayStub extends Component {
         StartPeriod: date
     });
    }
-   onChangeEndPeriod(e){
+   onChangeEndPeriod(date){
     this.setState({
-        EndPeriod: e.target.value
+        EndPeriod: date
     });
    }
    onChangePayDate(date){
@@ -122,13 +122,19 @@ class CreatePayStub extends Component {
    }
    onChangeRegHours(e){
     this.setState({
-        CompanyName: e.target.value
+        RegHours: e.target.value
     });
+    
    }
    onChangeAmount(e){
     this.setState({
         Amount: e.target.value
     });
+   }
+   onChangeGross(e){
+    this.setState({
+        Gross: e.target.value
+    })
    }
    onChangeGrossAmountYTD(e){
     this.setState({
@@ -180,16 +186,7 @@ class CreatePayStub extends Component {
         OvertimeAmountYTD: e.target.value
     });
    }
-   onChangeFICA(e){
-    this.setState({
-        FICA: e.target.value
-    });
-   }
-   onChangeFICAYTD(e){
-    this.setState({
-        FICAYTD: e.target.value
-    });
-   }
+  
    onChangeMedicare(e){
     this.setState({
         Medicare: e.target.value
@@ -212,6 +209,8 @@ class CreatePayStub extends Component {
    }
    onChangeFederal(e){
     this.setState({
+    // This one needs some thought.  Need to ensure it changes as 
+    // the gross earnings for the year changes brackets
         Federal: e.target.value
     });
    }
@@ -266,7 +265,10 @@ class CreatePayStub extends Component {
         CompanyLogo: e.target.value
     });
    }
+   
    onSubmit(e){
+    
+    
     e.preventDefault();
     const stub = {
         CompanyName: this.state.CompanyName,
@@ -277,6 +279,7 @@ class CreatePayStub extends Component {
         Rate: this.state.Rate,
         RegHours: this.state.RegHours,
         Amount: this.state.Amount,
+        Gross: this.state.Gross,
         GrossAmountYTD: this.state.GrossAmountYTD,
         HolidayHours: this.state.HolidayHours,
         HolidayAmount: this.state.HolidayAmount,
@@ -287,8 +290,6 @@ class CreatePayStub extends Component {
         OvertimeHours: this.state.OvertimeHours,
         OvertimeAmount: this.state.OvertimeAmount,
         OvertimeAmountYTD: this.state.OvertimeAmountYTD,
-        FICA: this.state.FICA,
-        FICAYTD: this.state.FICAYTD,
         Medicare: this.state.Medicare,
         MedicareYTD: this.state.MedicareYTD,
         SocSec: this.state.SocSec,
@@ -309,91 +310,257 @@ class CreatePayStub extends Component {
     axios.post('http://localhost:5000/stubs/add', stub)
       .then(res => console.log(res.data));
 
-    window.location = '/';
+    window.location = '/PayStubList';
    }
 
     render() {
         return (
             <div>
                 <h1>Create New Pay Stub</h1>
-                <form onSubmit = {this.onSubmit} className = 'movieTitle-left'>
-                    <div className='movieTitle-left'>
-                        <label>Company Name:  </label> 
-
-                        <input
+                <form className='form-style-9' onSubmit = {this.onSubmit} >
+                   <div className='form-style-child'>
+                   <input
+                            name ="field1"
                             type="text"
-                            className= 'movieTitle-h2'
+                            placeholder='Company Name'
                             value={this.state.CompanyName}
                             onChange ={this.onChangeCompanyName}
                             />
-                    </div>
-                    <br/>
-                    <div className='movieTitle-left'>
-                        <label>Employee Id: </label>
                         <input
                             type="text"
-                            className= 'movieTitle-h2'
+                            name = 'field2'
+                            placeholder='Employee Id'
                             value={this.state.EmployeeId}
                             onChange ={this.onChangeEmployeeId}
                             />
-                    </div>
-                    <br/>
-                    <div className='movieTitle-left'>
-                        <label>Start Period: </label>
-                        <div className='movieTitle-h2'>
-                            <DatePicker
-                                className = 'movieTitle-h2'
-                                selected={this.state.StartPeriod}
-                                onChange={this.onChangeStartPeriod}
-                            />
-                        </div>
-                    </div>
-                    <br/>
-                    <div className='movieTitle-left'>
-                        <label>End Period: </label>
-                        <div className='movieTitle-h2'>
-                            <DatePicker
-                                className = 'movieTitle-h2'
-                                selected={this.state.EndPeriod}
-                                onChange={this.onChangeEndPeriod}
-                            />
-                        </div>
-                    </div>
-                    <br/>
-                    <div className='movieTitle-left'>
-                        <label>Pay Date: </label>
-                        <div className='movieTitle-h2'>
-                            <DatePicker
-                                className = 'movieTitle-h2'
-                                selected={this.state.PayDate}
-                                onChange={this.onChangePayDate}
-                            />
-                        </div>
-                    </div>
-                    <br/>
-                    <div className='movieTitle-left'>
-                        <label>Rate:  </label> 
-
                         <input
+                            type='text'
+                            name ='netwages'
+                            placeholder='Net Wages'
+                            value={this.state.Amount}
+                            onChange={this.onChangeAmount}
+                        />
+                   </div>
+                       
+
+                    <div className='form-style-child'>
+                        <DatePicker 
+                            placeholderText = "Start Period"
+                            name="field3"
+                            selected={this.state.StartPeriod}
+                            onChange={this.onChangeStartPeriod}
+                        />
+                        <DatePicker 
+                            placeholderText = "End Period"
+                            name="field4"
+                            selected={this.state.EndPeriod}
+                            onChange={this.onChangeEndPeriod}
+                        />
+                        <DatePicker 
+                            placeholderText = "Pay Date"
+                            name="field5"
+                            selected={this.state.PayDate}
+                            onChange={this.onChangePayDate}
+                        />
+                        <input 
                             type="text"
-                            className= 'movieTitle-h2'
+                            placeholder='Rate'
+                            name="field6"
                             value={this.state.Rate}
                             onChange ={this.onChangeRate}
-                            />
-                    </div>
-                    <br/>
-                    <div className='movieTitle-left'>
-                        <label>Regular hours:  </label> 
-
-                        <input
+                        />
+                        </div>
+                             
+                           
+                    <div className='form-style-child'>
+                        
+                        <input 
                             type="text"
-                            className= 'movieTitle-h2'
-                            value={this.state.React}
+                            placeholder='Regular Hours'
+                            value={this.state.RegHours}
                             onChange ={this.onChangeRegHours}
-                            />
+                        />
+                        <input
+                            type = "text"
+                            placeholder='Holiday Hours'
+                            name="field7"
+                            value = {this.state.HolidayHours}
+                            onChange ={this.onChangeHolidayHours}
+                        />
+                        <input
+                            type = "text"
+                            placeholder='PTO Hours'
+                            name="field8"
+                            value={this.state.PTOHours}
+                            onChange = {this.onChangePTOHours}
+                        />
+                        <input
+                            type ="text"
+                            placeholder='Overtime Hours'
+                            name='overtimeHours'
+                            value={this.state.OvertimeHours}
+                            onChange={this.onChangeOverTimeHours}
+                        />
+                        
                     </div>
-                    <br/>
-                    <div className='movieTitle-left'>
+                    
+                    <div className='form-style-child'>
+                        <input
+                            type = "text"
+                            placeholder='Gross Wages'
+                            value = {this.state.Gross}
+                            onChange={this.onChangeGross}
+                        />
+                        <input
+                            type='text'
+                            placeholder='Holiday Wages'
+                            name = 'netwages'    
+                            value={this.state.HolidayAmount}
+                            onChange={this.onChangeHolidayAmount}
+                        />
+                        <input
+                            type='text'
+                            placeholder='PTO Wages'
+                            name='ptowages'
+                            value={this.state.PTOAmount}
+                            onChange={this.onChangePTOAmount}
+                        />
+                        <input
+                            type='text'
+                            placeholder='Overtime Wages'
+                            name='overtimewages'
+                            value={this.state.OvertimeAmount}
+                            onChange={this.onChangeOverTimeAmount}
+                        />
+                    </div>
+                    <div className='form-style-child'>
+                    
+                        <input 
+                            type="text"
+                            placeholder='Gross Wages YTD'
+                            name="field10"
+                            value={this.state.GrossAmountYTD}
+                            onChange={this.onChangeGrossAmountYTD}       
+                        />
+                        <input
+                            type = "text"
+                            placeholder='Holiday Wages YTD'
+                            name="field11"
+                            value = {this.state.HolidayAmountYTD}
+                            onChange={this.onChangeHolidayAmountYTD}       
+                        />
+                        <input
+                            type = "text"
+                            placeholder='PTO Wages YTD'
+                            name="field12"
+                            value={this.state.PTOAmountYTD}
+                            onChange={this.onChangePTOAmountYTD}      
+                        />
+                        <input
+                            type ='text'
+                            placeholder='Overtime Wages YTD'
+                            value={this.state.OvertimeAmountYTD}
+                            onChange={this.onChangeOverTimeAmountYTD}
+                        />
+                    </div>
+                    <div className='form-style-child'>
+                        <input
+                            type='text'
+                            placeholder='Medicare Tax'
+                            name='medicaretax'
+                            value={this.state.Medicare}
+                            onChange={this.onChangeMedicare}
+                        />
+                        <input
+                            type='text'
+                            placeholder='Social Sec Tax'
+                            name='socsectax'
+                            value={this.state.SocSec}
+                            onChange={this.onChangeSocSec}
+                        />
+                        <input
+                            type='text'
+                            placeholder='Federal Tax'
+                            name='federaltax'
+                            value={this.state.Federal}
+                            onChange={this.onChangeFederal}
+                        />
+                        <input
+                            type='text'
+                            placeholder='State Tax'
+                            name='statetax'
+                            value={this.state.State}
+                            onChange={this.onChangeState}
+                        />
+                    </div>
+                    <div className='form-style-child'>
+                        <input
+                            type='text'
+                            placeholder='Medicare Taxes YTD'
+                            name='medicareytd'
+                            value={this.state.MedicareYTD}
+                            onChange={this.onChangeMedicareYTD}
+                        />
+                        <input
+                            type='text'
+                            placeholder='Soc Sec Taxes YTD'
+                            value={this.state.SocSecYTD}
+                            onChange={this.onChangeSocSecYTD}
+                        />
+                        <input
+                            type='text'
+                            placeholder='Federal Taxes YTD'
+                            value={this.state.FederalYTD}
+                            onChange={this.onChangeFederalYTD}
+                        />
+                        <input
+                            type='text'
+                            placeholder='State Taxes YTD'
+                            value={this.state.onChangeStateYTD}
+                            onChange={this.onChangeStateYTD}
+                        />
+                    </div>
+                    <div className='form-style-child'>
+                        <input
+                            type='text'
+                            placeholder='Local Tax'
+                            value={this.state.Local}
+                            onChange={this.onChangeLocal}
+                        />
+                        <input
+                            type='text'
+                            placeholder='Oregon Transit tax'
+                            value={this.state.ORTransitTax}
+                            onChange={this.onChangeORTransitTax}
+                        />
+                        <input
+                            type='text'
+                            placeholder='OR Workers Benifit Tax'
+                            value={this.state.ORWBFTax}
+                            onChange={this.onChangeORWBFTax}
+                        />
+                    </div>
+                    <div className='form-style-child'>
+                        <input
+                            type='text'
+                            placeholder='Local Taxes YTD'
+                            value={this.state.LocalYTD}
+                            onChange={this.onChangeLocalYTD}
+                        />
+                        <input
+                            type='text'
+                            placeholder='Oregon Transit taxes YTD'
+                            value={this.state.ORTransitTaxYTD}
+                            onChange={this.onChangeORTransitTaxYTD}
+                        />
+                        <input
+                            type='text'
+                            placeholder='OR WBF Taxes YTD'
+                            value={this.state.ORWBFTaxYTD}
+                            onChange={this.onChangeORWBFTaxYTD}
+                        />
+                    </div>
+                    <div>
                         <input type = "submit" value="Create Pay Stub" className='btn btn-primary'/>
                     </div>
                 </form>
@@ -403,3 +570,4 @@ class CreatePayStub extends Component {
 }
 
 export default CreatePayStub;
+ 

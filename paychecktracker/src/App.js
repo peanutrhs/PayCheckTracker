@@ -15,7 +15,7 @@ function App() {
       <Routes>
         <Route path="/" exact element={<Landing/>} />
         <Route path='/PayStubList' element ={<PayStubList/>}/>
-        <Route path='/EditPayStub' element = {<EditPayStub/>}/>
+        <Route path='/EditPayStub' element = {<EditPayStub stub={''}/>}/>
         <Route path='CreatePayStub' element={<CreatePayStub/>}/>
         
       </Routes>

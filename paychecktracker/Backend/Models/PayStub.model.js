@@ -16,6 +16,7 @@ let StubSchema = new Schema({
   RegHours:{type:Number,default:0.00},
   Amount: {type:Number,default:0.00},
   GrossAmountYTD:{type:Number,default:0.00},
+  Gross:{type:Number,default:0.00},
   HolidayHours:{type:Number,default: 0.00},
   HolidayAmount:{type:Number,default:0.00},
   HolidayAmountYTD: {type:Number,default:0.00},
